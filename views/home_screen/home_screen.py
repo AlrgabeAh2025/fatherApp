@@ -1,13 +1,50 @@
 # استيراد المكتبات الضرورية
-from flet import *
-import requests
-import asyncio
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    Ref,  # لإنشاء مراجع للعناصر
+    TextField,  # لحقول إدخال النص
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    Image,  # لعرض الصور
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    ButtonStyle,  # لتخصيص نمط الأزرار
+    TextStyle,  # لتخصيص نمط النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+    NavigationDrawer,  # القائمة الجانبية
+    NavigationDrawerDestination,  # عنصر في القائمة الجانبية
+    Divider,  # خط فاصل
+    Icon,  # لعرض الأيقونات
+    icons,  # مكتبة الأيقونات المدمجة
+    IconButton,  # زر يحتوي على أيقونة
+    AppBar,  # شريط التطبيق العلوي
+    Dropdown,  # قائمة منسدلة
+    dropdown,  # لتحديد خيارات القائمة المنسدلة
+    ListTile,  # عنصر قائمة
+    ProgressBar,  # شريط التقدم
+    CircleAvatar,  # دائرة لعرض المحتوى
+    SnackBar,  # لعرض الرسائل العابرة
+    ProgressRing,  # حلقة التحميل
+    alignment,  # لمحاذاة العناصر
+    padding,  # لإضافة حشوة داخلية
+    TextButton,  # زر نصي
+    Icons,
+    TextAlign,
+    border,
+)
+import requests  # لإرسال طلبات HTTP
+import asyncio  # للتعامل مع المهام غير المتزامنة
+
 
 # تعريف فئة Home التي تمثل الشاشة الرئيسية للتطبيق
 class Home(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
         self.page = page  # حفظ صفحة التطبيق
         self.innerChild = {}  # بيانات الطفل المحدد
         self.children = []  # قائمة الأطفال
@@ -28,7 +65,10 @@ class Home(View):
             "com.snapchat.android": ("سناب شات", Icons.SNAPCHAT),  # Snapchat
             "com.tiktok.android": ("تيك توك", Icons.VIDEO_CALL),  # TikTok
             "com.google.android.gm": ("جيميل", Icons.EMAIL),  # Gmail
-            "com.android.vending": ("متجر جوجل بلاي", Icons.SHOPPING_CART),  # Google Play Store
+            "com.android.vending": (
+                "متجر جوجل بلاي",
+                Icons.SHOPPING_CART,
+            ),  # Google Play Store
             "com.microsoft.teams": ("مايكروسوفت تيمز", Icons.WORK),  # Microsoft Teams
             "com.skype.raider": ("سكايب", Icons.CALL),  # Skype
             "com.netflix.mediaclient": ("نتفليكس", Icons.MOVIE),  # Netflix
@@ -65,12 +105,16 @@ class Home(View):
                 IconButton(
                     icon=icons.PERSON,
                     icon_color="#ffffff",
-                    on_click=lambda x: self.page.go("/Profile"),  # الانتقال إلى صفحة الملف الشخصي
+                    on_click=lambda x: self.page.go(
+                        "/Profile"
+                    ),  # الانتقال إلى صفحة الملف الشخصي
                 ),
                 IconButton(
                     icon=icons.NOTIFICATIONS,
                     icon_color="#ffffff",
-                    on_click=lambda x: self.page.go("/notifications"),  # الانتقال إلى صفحة الإشعارات
+                    on_click=lambda x: self.page.go(
+                        "/notifications"
+                    ),  # الانتقال إلى صفحة الإشعارات
                 ),
             ],
             leading=IconButton(
@@ -128,14 +172,13 @@ class Home(View):
 
     # دالة لبناء واجهة عندما يكون هناك أطفال مضافين
     def buildHasChildrenUi(self):
-        self.scroll = ScrollMode.AUTO
+        self.scroll = ScrollMode.HIDDEN
         self.controls.clear()
         self.controls.append(
             ResponsiveRow(
                 controls=[
                     Dropdown(
                         label="اختر احد الابناء لعرض بياناته",
-                        width=100,
                         options=self.childrenList,  # قائمة الأطفال
                         label_style=TextStyle(
                             size=13,
@@ -468,7 +511,10 @@ class Home(View):
                         "apps": [
                             ListTile(
                                 title=Text(
-                                    self.app_icons.get(f"{app['appName']}", (f"{app['appName']}" , Icons.APPS))[0],
+                                    self.app_icons.get(
+                                        f"{app['appName']}",
+                                        (f"{app['appName']}", Icons.APPS),
+                                    )[0],
                                     style=TextStyle(
                                         size=13,
                                         weight=FontWeight.BOLD,
@@ -484,7 +530,10 @@ class Home(View):
                                     ),
                                 ),
                                 trailing=Icon(
-                                    self.app_icons.get(f"{app['appName']}", (f"{app['appName']}" , Icons.APPS))[1]
+                                    self.app_icons.get(
+                                        f"{app['appName']}",
+                                        (f"{app['appName']}", Icons.APPS),
+                                    )[1]
                                 ),
                                 subtitle=ProgressBar(
                                     value=self.get_usage_percentage(

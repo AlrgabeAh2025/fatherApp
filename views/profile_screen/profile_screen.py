@@ -1,12 +1,43 @@
 # استيراد المكتبات الضرورية
-from flet import *
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    Ref,  # لإنشاء مراجع للعناصر
+    TextField,  # لحقول إدخال النص
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    Image,  # لعرض الصور
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    ElevatedButton,  # لعرض الأزرار المرفوعة
+    ButtonStyle,  # لتخصيص نمط الأزرار
+    RoundedRectangleBorder,  # لتحديد زوايا مدورة للأزرار
+    TextStyle,  # لتخصيص نمط النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+    icons,  # مكتبة الأيقونات المدمجة
+    IconButton,  # زر يحتوي على أيقونة
+    AppBar,  # شريط التطبيق العلوي
+    ListTile,  # عنصر قائمة
+    SnackBar,  # لعرض الرسائل العابرة
+    ProgressRing,  # حلقة التحميل
+    alignment,  # لمحاذاة العناصر
+    FilePicker,  # لاختيار الملفات
+    BottomSheet,  # لوحة منزلقة من الأسفل
+    FilePickerFileType,  # لتحديد نوع الملفات المسموحة
+    TextButton,  # زر نصي
+    TextAlign,
+    border,
+)
 import requests
 
 # تعريف فئة PersonalInformation التي تمثل شاشة تعديل المعلومات الشخصية
 class PersonalInformation(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
         self.page = page  # حفظ صفحة التطبيق
 
         # تعريف AppBar (شريط التطبيق العلوي)
@@ -301,7 +332,7 @@ class PersonalInformation(View):
 class SecurityPasswords(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
         self.page = page  # حفظ صفحة التطبيق
 
         # تعريف AppBar (شريط التطبيق العلوي)
@@ -589,7 +620,7 @@ class Profile(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
         self.page = page  # حفظ صفحة التطبيق
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
 
         # تعريف FilePicker لاختيار صورة الملف الشخصي
         self.selector = FilePicker(on_result=self.ChangeProfileImage)

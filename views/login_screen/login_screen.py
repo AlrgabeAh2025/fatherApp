@@ -1,13 +1,37 @@
 # استيراد المكتبات الضرورية
-from flet import *
-import requests
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    TextField,  # لحقول إدخال النص
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    Row,  # لتنظيم العناصر في صفوف
+    Image,  # لعرض الصور
+    ImageFit,  # لتحديد كيفية ضبط الصورة داخل الحاوية
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    ElevatedButton,  # لعرض الأزرار المرفوعة
+    ButtonStyle,  # لتخصيص نمط الأزرار
+    RoundedRectangleBorder,  # لتحديد زوايا مدورة للأزرار
+    TextStyle,  # لتخصيص نمط النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+    IconButton,  # زر يحتوي على أيقونة
+    icons,  # مكتبة الأيقونات المدمجة
+    ProgressRing,  # حلقة التحميل
+    alignment,  # لمحاذاة العناصر
+    SnackBar,  # لعرض الرسائل العابرة
+)
+import requests  # لإرسال طلبات HTTP
 
 # تعريف فئة Login التي تمثل شاشة تسجيل الدخول
 class Login(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
         self.rtl = True  # تعيين اتجاه النص من اليمين إلى اليسار
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
 
         # تعريف حقل إدخال اسم المستخدم
         self.userNameTextBox = TextField(
@@ -35,7 +59,7 @@ class Login(View):
 
     # دالة لبناء واجهة تسجيل الدخول
     def loginUi(self):
-        self.scroll = ScrollMode.AUTO
+        self.scroll = ScrollMode.HIDDEN
         self.controls.clear()  # مسح العناصر الحالية
         self.controls.append(
             ResponsiveRow(  # صف متجاوب لتنظيم العناصر

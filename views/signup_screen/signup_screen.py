@@ -1,5 +1,32 @@
 # استيراد المكتبات الضرورية
-from flet import *
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    TextField,  # لحقول إدخال النص
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    Image,  # لعرض الصور
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    ElevatedButton,  # لعرض الأزرار المرفوعة
+    ButtonStyle,  # لتخصيص نمط الأزرار
+    RoundedRectangleBorder,  # لتحديد زوايا مدورة للأزرار
+    TextStyle,  # لتخصيص نمط النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+    icons,  # مكتبة الأيقونات المدمجة
+    IconButton,  # زر يحتوي على أيقونة
+    Dropdown,  # قائمة منسدلة
+    dropdown,  # لتحديد خيارات القائمة المنسدلة
+    Row,  # دائرة لعرض المحتوى
+    SnackBar,  # لعرض الرسائل العابرة
+    ProgressRing,  # حلقة التحميل
+    alignment,  # لمحاذاة العناصر
+    ImageFit,  # لإضافة حشوة داخلية
+    TextAlign,
+)
 import requests
 
 
@@ -7,7 +34,7 @@ import requests
 class SignUp(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
 
         # تعريف حقل إدخال الاسم الأول
         self.firstNameTextBox = TextField(
@@ -106,7 +133,7 @@ class SignUp(View):
 
     # دالة لبناء واجهة إنشاء الحساب
     def SignUpUi(self):
-        self.scroll = ScrollMode.AUTO
+        self.scroll = ScrollMode.HIDDEN
         self.controls.clear()  # مسح العناصر الحالية
         self.controls.append(
             ResponsiveRow(  # صف متجاوب لتنظيم العناصر

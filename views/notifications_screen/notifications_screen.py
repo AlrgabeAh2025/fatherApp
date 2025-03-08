@@ -1,12 +1,40 @@
 # استيراد المكتبات الضرورية
-from flet import *
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    Image,  # لعرض الصور
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    ButtonStyle,  # لتخصيص نمط الأزرار
+    TextStyle,  # لتخصيص نمط النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+    Icon,  # لعرض الأيقونات
+    icons,  # مكتبة الأيقونات المدمجة
+    IconButton,  # زر يحتوي على أيقونة
+    AppBar,  # شريط التطبيق العلوي
+    ListTile,  # عنصر قائمة
+    PopupMenuPosition,  # شريط التقدم
+    PopupMenuItem,  # دائرة لعرض المحتوى
+    PopupMenuButton,  # لعرض الرسائل العابرة
+    ProgressRing,  # حلقة التحميل
+    alignment,  # لمحاذاة العناصر
+    TextButton,  # زر نصي
+    colors,
+    TextAlign,
+    border,
+)
 import requests
 
 # تعريف فئة MoreInfoAboutNotifications التي تمثل شاشة تفاصيل التنبيه
 class MoreInfoAboutNotifications(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
         self.bgcolor = "#ffffff"  # لون الخلفية
         self.page = page  # حفظ صفحة التطبيق
 
@@ -37,7 +65,7 @@ class MoreInfoAboutNotifications(View):
 
     # دالة لبناء واجهة تفاصيل التنبيه
     def buildUi(self, note):
-        self.scroll = ScrollMode.AUTO
+        self.scroll = ScrollMode.HIDDEN
         self.controls.clear()
         self.controls.append(
             ResponsiveRow(
@@ -202,7 +230,7 @@ class MoreInfoAboutNotifications(View):
 class Notifications(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
         self.bgcolor = "#ffffff"  # لون الخلفية
         self.notifications = []  # قائمة الإشعارات
 

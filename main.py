@@ -1,5 +1,16 @@
 # استيراد المكتبات والوحدات الضرورية
-from flet import *
+from flet import (
+    Text,  # لعرض النصوص
+    TextStyle,  # لتخصيص نمط النصوص
+    ThemeMode,  # لمحاذاة العناصر أفقيًا
+    Theme,  # لمحاذاة العناصر عموديًا
+    AppBarTheme,  # زر يحتوي على أيقونة
+    Icons,  # لعرض الأيقونات
+    Page,  # مكتبة الأيقونات المدمجة
+    ScrollbarTheme,  # حلقة التحميل
+    app,  # لمحاذاة العناصر
+    SnackBar,  # لعرض الرسائل العابرة
+)
 from views.login_screen.login_screen import Login
 from views.signup_screen.signup_screen import SignUp
 from views.welcome_screen.welcome_screen import Welcome

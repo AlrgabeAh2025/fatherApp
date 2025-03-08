@@ -1,5 +1,30 @@
 # استيراد المكتبات الضرورية
-from flet import *
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    ButtonStyle,  # لتخصيص نمط الأزرار
+    TextStyle,  # لتخصيص نمط النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+    Icon,  # لعرض الأيقونات
+    icons,  # مكتبة الأيقونات المدمجة
+    IconButton,  # زر يحتوي على أيقونة
+    AppBar,  # شريط التطبيق العلوي
+    ListTile,  # عنصر قائمة
+    ProgressBar,  # شريط التقدم
+    ProgressRing,  # حلقة التحميل
+    alignment,  # لمحاذاة العناصر
+    TextButton,  # زر نصي
+    Icons,
+    TextAlign,
+    border,
+)
 import requests
 
 # تعريف فئة MostUsedApplications التي تمثل شاشة التطبيقات الأكثر استخدامًا

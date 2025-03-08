@@ -1,5 +1,22 @@
 # استيراد المكتبات الضرورية
-from flet import *
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    Image,  # لعرض الصور
+    ImageFit,  # لتحديد كيفية ضبط الصورة داخل الحاوية
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    ElevatedButton,  # لعرض الأزرار المرفوعة
+    ButtonStyle,  # لتخصيص نمط الأزرار
+    RoundedRectangleBorder,  # لتحديد زوايا مدورة للأزرار
+    TextStyle,  # لتخصيص نمط النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+)
 
 
 # تعريف فئة Welcome التي تمثل شاشة الترحيب
@@ -8,7 +25,8 @@ class Welcome(View):
     # دالة البناء (Constructor) للفئة
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
+        self.page = page
         self.controls.append(  # إضافة عناصر التحكم إلى الواجهة
             ResponsiveRow(  # استخدام ResponsiveRow لتنظيم العناصر بشكل متجاوب
                 controls=[

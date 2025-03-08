@@ -1,12 +1,41 @@
 # استيراد المكتبات الضرورية
-from flet import *
-import requests
+from flet import (
+    View,  # الفئة الأساسية لإنشاء واجهات المستخدم
+    ScrollMode,  # لتحديد وضع التمرير (Auto, Always, Hidden, etc.)
+    Ref,  # لإنشاء مراجع للعناصر
+    TextField,  # لحقول إدخال النص
+    Container,  # حاوية لتجميع العناصر وتطبيق الأنماط
+    Column,  # لتنظيم العناصر في أعمدة
+    ResponsiveRow,  # لتنظيم العناصر في صفوف متجاوبة
+    Text,  # لعرض النصوص
+    FontWeight,  # لتحديد وزن الخط (عريض، عادي، إلخ)
+    IconButton,  # زر يحتوي على أيقونة
+    AppBar,  # شريط التطبيق العلوي
+    Icon,  # لعرض الأيقونات
+    icons,  # مكتبة الأيقونات المدمجة
+    ListTile,  # عنصر قائمة
+    PopupMenuButton,  # زر قائمة منبثقة
+    PopupMenuItem,  # عنصر في القائمة المنبثقة
+    PopupMenuPosition,  # لتحديد موقع القائمة المنبثقة
+    SnackBar,  # لعرض الرسائل العابرة
+    ProgressRing,  # حلقة التحميل
+    alignment,  # لمحاذاة العناصر
+    border,  # لتحديد الحدود
+    border_radius,  # لتحديد زوايا مدورة للحاويات أو العناصر
+    TextStyle,  # لتخصيص نمط النصوص
+    TextAlign,  # لمحاذاة النصوص
+    CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
+    MainAxisAlignment,  # لمحاذاة العناصر عموديًا
+    TextButton,  # زر نصي
+    ButtonStyle,  # لتخصيص نمط الأزرار
+)
+import requests  # لإرسال طلبات HTTP
 
 # تعريف فئة Devices التي تمثل شاشة إدارة الأجهزة
 class Devices(View):
     def __init__(self, route, page):
         super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
-        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
         self.page = page  # حفظ صفحة التطبيق
         self.devices = []  # قائمة الأجهزة
         self.keyTextbox = Ref[TextField]()  # مرجع لحقل إدخال المفتاح
