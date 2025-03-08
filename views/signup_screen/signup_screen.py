@@ -1,50 +1,26 @@
+# استيراد المكتبات الضرورية
 from flet import *
 import requests
 
 
-class SignupControl:
-    def __init__(self , page):
-        self.baseUrl = "http://127.0.0.1:8000"
-        self.page = page
-
-    def SignUpRequest(self, data):
-        body = {
-            "first_name": data[0],
-            "last_name": data[1],
-            "gender": data[2],
-            "username": data[3],
-            "password": data[4],
-            "userType": 0,
-        }
-        try:
-            response = requests.post(url=f"{self.baseUrl}/signup/", data=body)
-            json = response.json()
-            if response.status_code == 200:
-                self.page.client_storage.set("access", json["access"])
-                self.page.client_storage.set("refresh", json["refresh"])
-                return [True, "تم تسجيل الدخول بنجاح"]
-            else:
-                return [False, json["username"][0]]
-        except requests.exceptions.Timeout:
-            return [False, "اتصال الانترنت بطئ"]
-        except requests.exceptions.ConnectionError:
-            return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
-
-
+# تعريف فئة SignUp التي تمثل شاشة إنشاء الحساب
 class SignUp(View):
     def __init__(self, route, page):
-        super().__init__(route=route)
-        self.scroll = ScrollMode.AUTO
-        self.signUpController = SignupControl(page)
+        super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
+        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
 
+        # تعريف حقل إدخال الاسم الأول
         self.firstNameTextBox = TextField(
             label="الاسم الاول",
-            border_radius=border_radius.all(22),
-            border_color="#171335",
-            text_style=TextStyle(size=15, font_family="ElMessiri"),
-            label_style=TextStyle(size=14, font_family="ElMessiri"),
+            border_radius=border_radius.all(22),  # زوايا مدورة للحقل
+            border_color="#171335",  # لون الحدود
+            text_style=TextStyle(size=15, font_family="ElMessiri"),  # تخصيص نمط النص
+            label_style=TextStyle(
+                size=14, font_family="ElMessiri"
+            ),  # تخصيص نمط التسمية
         )
 
+        # تعريف حقل إدخال الاسم الأخير
         self.lastNameTextBox = TextField(
             label="الاسم الاخير",
             border_radius=border_radius.all(22),
@@ -53,6 +29,7 @@ class SignUp(View):
             label_style=TextStyle(size=14, font_family="ElMessiri"),
         )
 
+        # تعريف حقل إدخال اسم المستخدم
         self.userNameTextBox = TextField(
             label="اســـم المــستخدم",
             border_radius=border_radius.all(22),
@@ -61,31 +38,58 @@ class SignUp(View):
             label_style=TextStyle(size=14, font_family="ElMessiri"),
         )
 
+        # تعريف قائمة اختيار الجنس
         self.genderOptionMenu = Dropdown(
             label="الجنس",
-            width=100,
+            width=100,  # عرض القائمة
             options=[
-                dropdown.Option(content=Text("ذكر"), text=1),
-                dropdown.Option(content=Text("انثى"), text=2),
+                dropdown.Option(  # خيار "ذكر"
+                    content=Text(
+                        "ذكر",
+                        text_align=TextAlign.RIGHT,  # محاذاة النص إلى اليمين
+                        style=TextStyle(
+                            size=13,
+                            weight=FontWeight.NORMAL,
+                            font_family="ElMessiri",
+                        ),
+                    ),
+                    text=1,  # القيمة المرتبطة بالخيار
+                    alignment=alignment.center_right,  # محاذاة الخيار إلى اليمين
+                ),
+                dropdown.Option(  # خيار "انثى"
+                    content=Text(
+                        "انثى",
+                        text_align=TextAlign.RIGHT,
+                        style=TextStyle(
+                            size=13,
+                            weight=FontWeight.NORMAL,
+                            font_family="ElMessiri",
+                        ),
+                    ),
+                    text=2,
+                    alignment=alignment.center_right,
+                ),
             ],
-            label_style=TextStyle(
+            label_style=TextStyle(  # تخصيص نمط تسمية القائمة
                 size=13,
                 weight=FontWeight.NORMAL,
                 font_family="ElMessiri",
             ),
-            border_radius=border_radius.all(22),
+            border_radius=border_radius.all(22),  # زوايا مدورة للقائمة
         )
 
+        # تعريف حقل إدخال كلمة المرور
         self.passwordTextBox = TextField(
             label="كــلمة المــرور",
-            password=True,
-            can_reveal_password=True,
+            password=True,  # إخفاء النص
+            can_reveal_password=True,  # إمكانية إظهار النص
             border_radius=border_radius.all(22),
             border_color="#171335",
             text_style=TextStyle(size=15, font_family="ElMessiri"),
             label_style=TextStyle(size=14, font_family="ElMessiri"),
         )
 
+        # تعريف حقل إدخال تأكيد كلمة المرور
         self.rePasswordTextBox = TextField(
             label="تأكيد كــلمة المــرور",
             password=True,
@@ -96,108 +100,128 @@ class SignUp(View):
             label_style=TextStyle(size=14, font_family="ElMessiri"),
         )
 
-        self.content = self.SignUpUi()
-        self.controls.append(self.content)
+    # دالة تُستدعى عند تحميل الواجهة
+    def did_mount(self):
+        self.SignUpUi()
 
+    # دالة لبناء واجهة إنشاء الحساب
     def SignUpUi(self):
         self.scroll = ScrollMode.AUTO
-        return ResponsiveRow(
-            controls=[
-                Row(
-                    controls=[
-                        IconButton(
-                            icon=icons.ARROW_BACK, on_click=lambda x: self.page.go("/")
-                        )
-                    ],
-                    expand=False,
-                    alignment=MainAxisAlignment.START,
-                ),
-                Column(
-                    controls=[
-                        ResponsiveRow(
-                            controls=[
-                                Image(
-                                    src="images/logo.png",
-                                    fit=ImageFit.COVER,
-                                    border_radius=border_radius.all(20.0),
-                                    col={"xs": 10, "sm": 10, "md": 7, "lg": 5, "xl": 5},
-                                ),
-                            ],
-                            expand=False,
-                            alignment=MainAxisAlignment.CENTER,
-                        ),
-                        Container(height=5),
-                        Text(
-                            "وصلة",
-                            size=30,
-                            weight=FontWeight.BOLD,
-                            font_family="ElMessiri",
-                        ),
-                        ResponsiveRow(
-                            controls=[self.firstNameTextBox],
-                        ),
-                        Container(height=5),
-                        ResponsiveRow(
-                            controls=[self.lastNameTextBox],
-                        ),
-                        Container(height=5),
-                        ResponsiveRow(
-                            controls=[self.genderOptionMenu],
-                        ),
-                        Container(height=5),
-                        self.userNameTextBox,
-                        Container(height=5),
-                        self.passwordTextBox,
-                        Container(height=5),
-                        self.rePasswordTextBox,
-                        Container(height=20),
-                        ResponsiveRow(
-                            controls=[
-                                ElevatedButton(
-                                    "انــشاء حــساب",
-                                    style=ButtonStyle(
-                                        shape=RoundedRectangleBorder(radius=22),
-                                        bgcolor="#171335",
-                                        color="#ffffff",
-                                        text_style=TextStyle(
-                                            size=15,
-                                            weight=FontWeight.BOLD,
-                                            font_family="ElMessiri",
-                                        ),
-                                        padding=5,
+        self.controls.clear()  # مسح العناصر الحالية
+        self.controls.append(
+            ResponsiveRow(  # صف متجاوب لتنظيم العناصر
+                controls=[
+                    Row(  # صف لعرض زر الرجوع
+                        controls=[
+                            IconButton(
+                                icon=icons.ARROW_BACK,  # أيقونة الرجوع
+                                on_click=lambda e: self.page.go(
+                                    "/"
+                                ),  # حدث النقر للرجوع إلى الصفحة الرئيسية
+                            )
+                        ],
+                        expand=False,
+                        alignment=MainAxisAlignment.START,  # محاذاة الزر إلى اليسار
+                    ),
+                    Column(  # عمود لتجميع العناصر
+                        controls=[
+                            ResponsiveRow(  # صف متجاوب لعرض الصورة
+                                controls=[
+                                    Image(
+                                        src="images/logo.png",
+                                        fit=ImageFit.COVER,
+                                        border_radius=border_radius.all(20.0),
+                                        col={  # تحديد حجم الصورة بناءً على حجم الشاشة
+                                            "xs": 10,
+                                            "sm": 10,
+                                            "md": 7,
+                                            "lg": 5,
+                                            "xl": 5,
+                                        },
                                     ),
-                                    on_click=lambda e: self.SignUpEvent(),
-                                ),
-                            ]
-                        ),
-                    ],
-                    horizontal_alignment=CrossAxisAlignment.CENTER,
-                    alignment=MainAxisAlignment.CENTER,
-                ),
-            ],
-            expand=True,
+                                ],
+                                expand=False,
+                                alignment=MainAxisAlignment.CENTER,  # محاذاة الصورة في المنتصف
+                            ),
+                            Container(height=5),  # حاوية فارغة لخلق مسافة
+                            Text(  # نص عنوان الشاشة
+                                "حماية الاطفال",
+                                size=20,
+                                weight=FontWeight.BOLD,
+                                font_family="ElMessiri",
+                            ),
+                            ResponsiveRow(  # صف متجاوب لعرض حقل الاسم الأول
+                                controls=[self.firstNameTextBox],
+                            ),
+                            Container(height=5),
+                            ResponsiveRow(  # صف متجاوب لعرض حقل الاسم الأخير
+                                controls=[self.lastNameTextBox],
+                            ),
+                            Container(height=5),
+                            ResponsiveRow(  # صف متجاوب لعرض قائمة اختيار الجنس
+                                controls=[self.genderOptionMenu],
+                            ),
+                            Container(height=5),
+                            self.userNameTextBox,  # عرض حقل اسم المستخدم
+                            Container(height=5),
+                            self.passwordTextBox,  # عرض حقل كلمة المرور
+                            Container(height=5),
+                            self.rePasswordTextBox,  # عرض حقل تأكيد كلمة المرور
+                            Container(height=20),
+                            ResponsiveRow(  # صف متجاوب لعرض زر إنشاء الحساب
+                                controls=[
+                                    ElevatedButton(
+                                        "انــشاء حــساب",
+                                        style=ButtonStyle(  # تخصيص نمط الزر
+                                            shape=RoundedRectangleBorder(radius=22),
+                                            bgcolor="#171335",
+                                            color="#ffffff",
+                                            text_style=TextStyle(
+                                                size=15,
+                                                weight=FontWeight.BOLD,
+                                                font_family="ElMessiri",
+                                            ),
+                                            padding=5,
+                                        ),
+                                        on_click=lambda e: self.SignUpEvent(),  # حدث النقر لإنشاء الحساب
+                                    ),
+                                ]
+                            ),
+                        ],
+                        horizontal_alignment=CrossAxisAlignment.CENTER,  # محاذاة العناصر أفقياً في المنتصف
+                        alignment=MainAxisAlignment.CENTER,  # محاذاة العناصر عمودياً في المنتصف
+                    ),
+                ],
+                expand=True,  # توسيع الصف لملء المساحة المتاحة
+            )
         )
+        self.update()  # تحديث الواجهة
 
-    # Function to generate and return the loader UI (Progress Ring)
+    # دالة لعرض واجهة التحميل
     def loaderUi(self):
         self.scroll = None
-        return Column(
-            controls=[
-                Container(
-                    content=ProgressRing(visible=True),  # Progress ring loader
-                    alignment=alignment.center,
-                    height=float("inf"),  # Make the container take full height
-                    expand=True,  # Ensure the container expands to fill available space
-                ),
-            ],
-            expand=True,  # Make the column expand to take up all available space
+        self.controls.clear()
+        self.controls.append(
+            Column(
+                controls=[
+                    Container(
+                        content=ProgressRing(visible=True),  # عرض حلقة التحميل
+                        alignment=alignment.center,  # محاذاة الحلقة في المنتصف
+                        height=float("inf"),  # جعل الحاوية تأخذ المساحة الكاملة
+                        expand=True,  # توسيع الحاوية لملء المساحة المتاحة
+                    ),
+                ],
+                expand=True,  # توسيع العمود لملء المساحة المتاحة
+            )
         )
+        self.update()
 
+    # دالة للتحقق من صحة البيانات المدخلة
     def checkTextBoxData(self):
         errors = [
             True if self.firstNameTextBox.value != "" else "الرجاء ادخال اسمك الاول",
             True if self.lastNameTextBox.value != "" else "الرجاء ادخال اسمك الاخير",
-            True if self.genderOptionMenu.value != None else "الرجاء اختيار الجس",
+            True if self.genderOptionMenu.value != None else "الرجاء اختيار الجنس",
             (
                 True
                 if len(self.userNameTextBox.value) > 2
@@ -231,34 +255,72 @@ class SignUp(View):
             self.rePasswordTextBox,
             self.rePasswordTextBox,
         ]
+
         state = True
         for index, error in enumerate(errors):
             if error != True:
                 state = False
-                textBoxes[index].error = Text(f"{error}")
+                textBoxes[index].error = Text(f"{error}")  # عرض رسالة الخطأ
             else:
-                textBoxes[index].error = None
+                textBoxes[index].error = None  # إزالة رسالة الخطأ
         self.update()
         textBoxes.pop()
-        return [[text.value for text in textBoxes], state]
+        return [
+            [text.value for text in textBoxes],
+            state,
+        ]  # إرجاع البيانات وحالة التحقق
 
-    def SignUpEvent(self):
-        data, state = self.checkTextBoxData()
-        print(data)
-        print(state)
-        if state:
-            self.controls.clear()  # Clear the current controls from the view
-            self.controls.append(self.loaderUi())  # Add the loader UI to show progress
-            self.update()
-            authState = self.signUpController.SignUpRequest(data)
-            if authState[
-                0
-            ]:  # If authentication is successful, navigate to the home page
-                self.page.go("/home")
+    # دالة غير متزامنة لإرسال طلب إنشاء الحساب
+    async def SignUpRequest(self, data):
+        body = {
+            "first_name": data[0],
+            "last_name": data[1],
+            "gender": data[2],
+            "username": data[3],
+            "password": data[4],
+            "userType": 0,
+        }
+        try:
+            response = requests.post(url=f"{SignUp.baseUrl}/signup/", data=body)
+            json = response.json()
+            if response.status_code == 200:
+                await self.page.client_storage.set_async(
+                    "access", json["access"]
+                )  # حفظ توكن الوصول
+                await self.page.client_storage.set_async(
+                    "refresh", json["refresh"]
+                )  # حفظ توكن التحديث
+                userData = {
+                    "username": json["username"],
+                    "gender": json["gender"],
+                    "first_name": json["first_name"],
+                    "last_name": json["last_name"],
+                    "profileImage": json["profileImage"],
+                }
+                await self.page.client_storage.set_async(
+                    "userData", userData
+                )  # حفظ بيانات المستخدم
+                return [True, "تم انشاء الحساب بنجاح"]
             else:
-                self.controls.clear()  # Clear the controls again
-                self.controls.append(self.SignUpUi())  # Add the login form UI back
-                snack_bar = SnackBar(
+                return [False, json["username"][0]]  # إرجاع رسالة الخطأ
+        except requests.exceptions.Timeout:
+            return [False, "اتصال الانترنت بطئ"]
+        except requests.exceptions.ConnectionError:
+            return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
+
+    # دالة لمعالجة حدث إنشاء الحساب
+    def SignUpEvent(self):
+        data, state = self.checkTextBoxData()  # التحقق من صحة البيانات
+        if state:
+            self.loaderUi()  # عرض واجهة التحميل
+            authState = self.page.run_task(
+                self.SignUpRequest, data
+            ).result()  # إرسال طلب إنشاء الحساب
+            if authState[0]:  # إذا تم إنشاء الحساب بنجاح
+                self.page.go("/home")  # الانتقال إلى الصفحة الرئيسية
+            else:
+                self.SignUpUi()  # إعادة عرض واجهة إنشاء الحساب
+                snack_bar = SnackBar(  # عرض رسالة الخطأ
                     content=Text(
                         f"{authState[1]}",
                         style=TextStyle(size=15, font_family="ElMessiri"),
@@ -266,4 +328,4 @@ class SignUp(View):
                     show_close_icon=True,
                 )
                 self.page.open(snack_bar)
-                self.update()  # Update the view to reflect the changes
+                self.update()  # تحديث الواجهة

@@ -1,21 +1,43 @@
+# استيراد المكتبات الضرورية
 from flet import *
 import requests
+import asyncio
 
-
+# تعريف فئة Home التي تمثل الشاشة الرئيسية للتطبيق
 class Home(View):
-
     def __init__(self, route, page):
-        super().__init__(route=route)
-        self.scroll = ScrollMode.AUTO
-        self.page = page
-        self.baseUrl = "http://127.0.0.1:8000"
-        self.innerChild = {}
-        self.children = []
-        self.childrenList = []
+        super().__init__(route=route)  # استدعاء دالة البناء للفئة الأم (View)
+        self.scroll = ScrollMode.AUTO  # تعيين وضع التمرير إلى تلقائي
+        self.page = page  # حفظ صفحة التطبيق
+        self.innerChild = {}  # بيانات الطفل المحدد
+        self.children = []  # قائمة الأطفال
+        self.childrenList = []  # قائمة الأطفال لعرضها في Dropdown
+        self.keyTextbox = Ref[TextField]()  # مرجع لحقل إدخال المفتاح
+        self.notifications = Container(width=0, height=0)  # حاوية للإشعارات
+        self.notificationsState = True  # حالة الإشعارات (مفعلة/معطلة)
 
+        # قاموس يحتوي على أيقونات التطبيقات وأسمائها
+        self.app_icons = {
+            "com.android.chrome": ("متصفح كروم", Icons.LANGUAGE),  # Chrome
+            "com.whatsapp": ("واتساب", Icons.CHAT),  # WhatsApp
+            "com.facebook.katana": ("فيسبوك", Icons.FACEBOOK),  # Facebook
+            "com.instagram.android": ("إنستجرام", Icons.CAMERA),  # Instagram
+            "com.google.android.youtube": ("يوتيوب", Icons.VIDEO_LIBRARY),  # YouTube
+            "com.twitter.android": ("تويتر", Icons.PUBLIC),  # Twitter (حاليًا X)
+            "org.telegram.messenger": ("تيليجرام", Icons.TELEGRAM),  # Telegram
+            "com.snapchat.android": ("سناب شات", Icons.SNAPCHAT),  # Snapchat
+            "com.tiktok.android": ("تيك توك", Icons.VIDEO_CALL),  # TikTok
+            "com.google.android.gm": ("جيميل", Icons.EMAIL),  # Gmail
+            "com.android.vending": ("متجر جوجل بلاي", Icons.SHOPPING_CART),  # Google Play Store
+            "com.microsoft.teams": ("مايكروسوفت تيمز", Icons.WORK),  # Microsoft Teams
+            "com.skype.raider": ("سكايب", Icons.CALL),  # Skype
+            "com.netflix.mediaclient": ("نتفليكس", Icons.MOVIE),  # Netflix
+            "com.spotify.music": ("سبوتيفاي", Icons.MUSIC_NOTE),  # Spotify
+        }
+
+        # تعريف NavigationDrawer (القائمة الجانبية)
         self.drawer = NavigationDrawer(
-            on_dismiss=self.handle_dismissal,
-            on_change=self.handle_change,
+            on_change=self.handle_change,  # حدث تغيير العنصر المحدد
             controls=[
                 Container(height=12),
                 NavigationDrawerDestination(
@@ -37,75 +59,74 @@ class Home(View):
             ],
         )
 
+        # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             actions=[
                 IconButton(
                     icon=icons.PERSON,
                     icon_color="#ffffff",
-                    on_click=lambda x: self.page.go("/Profile"),
+                    on_click=lambda x: self.page.go("/Profile"),  # الانتقال إلى صفحة الملف الشخصي
                 ),
                 IconButton(
                     icon=icons.NOTIFICATIONS,
                     icon_color="#ffffff",
-                    on_click=lambda x: self.page.go("/notifications"),
+                    on_click=lambda x: self.page.go("/notifications"),  # الانتقال إلى صفحة الإشعارات
                 ),
             ],
             leading=IconButton(
                 icon=icons.MENU,
                 icon_color="#ffffff",
-                on_click=lambda e: self.page.open(self.drawer),
+                on_click=lambda e: self.page.open(self.drawer),  # فتح القائمة الجانبية
             ),
             toolbar_height=100,
             title=Text(
-                "وصلة",
-                size=30,
+                "حماية الاطفال",
+                size=20,
                 weight=FontWeight.BOLD,
                 color="#ffffff",
                 font_family="ElMessiri",
             ),
         )
 
-        loader = self.loaderUi()
-        self.controls.append(loader)
-
+    # دالة لعرض واجهة التحميل
     def loaderUi(self):
         self.scroll = None
         return Column(
             controls=[
                 Container(
-                    content=ProgressRing(visible=True),  # Progress ring loader
+                    content=ProgressRing(visible=True),  # عرض حلقة التحميل
                     alignment=alignment.center,
-                    height=float("inf"),  # Make the container take full height
-                    expand=True,  # Ensure the container expands to fill available space
+                    height=float("inf"),  # جعل الحاوية تأخذ المساحة الكاملة
+                    expand=True,  # توسيع الحاوية لملء المساحة المتاحة
                 ),
             ],
-            expand=True,  # Make the column expand to take up all available space
+            expand=True,  # توسيع العمود لملء المساحة المتاحة
         )
 
-    def handle_dismissal(self, e):
-        self.page.add(Text("Drawer dismissed"))
-
+    # دالة للتعامل مع تغيير العنصر المحدد في القائمة الجانبية
     def handle_change(self, e):
         routs = {
-            "0": "/home",
-            "1": "/devices",
-            "2": "/",
+            "0": "/home",  # الرئيسية
+            "1": "/devices",  # الأجهزة المرتبطة
+            "2": "/",  # تسجيل الخروج
         }
-        self.page.client_storage.clear()
-        self.page.go(routs[e.data])
-        self.page.close(self.drawer)
 
+        if routs[e.data] == "/":
+            self.page.client_storage.clear()  # مسح التخزين المحلي
+
+        self.page.go(routs[e.data])  # الانتقال إلى المسار المحدد
+        self.page.close(self.drawer)  # إغلاق القائمة الجانبية
+
+    # دالة تُستدعى عند تحميل الواجهة
     def did_mount(self):
-        refresh = self.page.client_storage.get("refresh")
-        task = self.page.run_task(self.checkAccessToken, refresh)
-        if task.result()[0]:
-            self.page.client_storage.set("access", task.result()[1])
-            self.page.client_storage.set("refresh", task.result()[2])
-            self.page.run_task(self.loadChildren, task.result()[1])
-        else:
-            self.page.client_storage.clear()
-            self.page.go("/")
+        loader = self.loaderUi()  # عرض واجهة التحميل
+        self.controls.clear()
+        self.controls.append(loader)
+        self.update()
+        self.loadChildren()  # تحميل بيانات الأطفال
+        self.page.run_task(self.updatenotification)  # تحديث الإشعارات بشكل دوري
 
+    # دالة لبناء واجهة عندما يكون هناك أطفال مضافين
     def buildHasChildrenUi(self):
         self.scroll = ScrollMode.AUTO
         self.controls.clear()
@@ -115,13 +136,13 @@ class Home(View):
                     Dropdown(
                         label="اختر احد الابناء لعرض بياناته",
                         width=100,
-                        options=self.childrenList,
+                        options=self.childrenList,  # قائمة الأطفال
                         label_style=TextStyle(
                             size=13,
                             weight=FontWeight.NORMAL,
                             font_family="ElMessiri",
                         ),
-                        on_change=self.changeSelectedChild,
+                        on_change=self.changeSelectedChild,  # حدث تغيير الطفل المحدد
                     ),
                     Container(height=10),
                     Column(
@@ -176,6 +197,7 @@ class Home(View):
                                     Container(
                                         content=Column(
                                             controls=[
+                                                Container(),
                                                 Icon(
                                                     icons.WIDGETS,
                                                     size=50,
@@ -194,9 +216,8 @@ class Home(View):
                                             horizontal_alignment=CrossAxisAlignment.CENTER,
                                             alignment=MainAxisAlignment.SPACE_AROUND,
                                         ),
-                                        padding=10,
                                         alignment=alignment.center,
-                                        height=120,
+                                        height=140,
                                         border_radius=10,
                                         col={"xs": 6, "sm": 10, "md": 5, "xl": 5},
                                         border=border.all(width=1, color="#110b22"),
@@ -207,6 +228,7 @@ class Home(View):
                                     Container(
                                         content=Column(
                                             controls=[
+                                                self.notifications,
                                                 Icon(
                                                     icons.SECURITY,
                                                     size=50,
@@ -225,9 +247,8 @@ class Home(View):
                                             horizontal_alignment=CrossAxisAlignment.CENTER,
                                             alignment=MainAxisAlignment.SPACE_AROUND,
                                         ),
-                                        padding=10,
                                         alignment=alignment.center,
-                                        height=120,
+                                        height=140,
                                         border_radius=10,
                                         col={"xs": 6, "sm": 10, "md": 5, "xl": 5},
                                         border=border.all(width=1, color="#110b22"),
@@ -255,7 +276,25 @@ class Home(View):
                             ),
                             Container(
                                 content=ResponsiveRow(
-                                    controls=self.innerChild["apps"],
+                                    controls=(
+                                        self.innerChild["apps"]
+                                        if len(self.innerChild["apps"]) > 0
+                                        else [
+                                            Container(
+                                                content=Text(
+                                                    "لا يوجد تطبيقات بعد",
+                                                    style=TextStyle(
+                                                        size=12,
+                                                        weight=FontWeight.BOLD,
+                                                        font_family="ElMessiri",
+                                                    ),
+                                                    color="#666666",
+                                                    text_align=TextAlign.START,
+                                                ),
+                                                padding=20,
+                                            ),
+                                        ]
+                                    ),
                                 ),
                                 bgcolor="#ffffff",
                                 border=border.all(0.5, "#110b22"),
@@ -272,6 +311,34 @@ class Home(View):
         )
         self.update()
 
+    # دالة لإضافة طفل جديد
+    def addNewChild(self, e):
+        values, state = self.checkTextBoxData()  # التحقق من صحة البيانات المدخلة
+        if state:
+            self.loaderUi()  # عرض واجهة التحميل
+            state, result = self.page.run_task(
+                self.sendPostRequest, "Children", {"key": values}
+            ).result()
+            if state:
+                self.showMessage(result["key"])  # عرض رسالة نجاح
+                self.did_mount()  # إعادة تحميل الواجهة
+            else:
+                self.did_mount()
+                self.showMessage(result["key"])  # عرض رسالة خطأ
+
+    # دالة للتحقق من صحة البيانات المدخلة
+    def checkTextBoxData(self):
+        if not self.keyTextbox.current.value:
+            self.keyTextbox.current.error = Text(
+                "الرجاء ادخال  المفتاح اولا",
+                style=TextStyle(size=10, font_family="ElMessiri"),
+            )
+            self.update()
+            return self.keyTextbox.current.value, False
+        else:
+            return self.keyTextbox.current.value, True
+
+    # دالة لبناء واجهة عندما لا يكون هناك أطفال مضافين
     def buildHasNoChild(self):
         self.controls.clear()
         self.controls.append(
@@ -292,7 +359,7 @@ class Home(View):
                                 ),
                                 Container(
                                     content=Text(
-                                        "اولا اضغط على الزر بالاسفل لمسح رمز (QR) على جهاز طفلك ثم يمكنك الحصول على اشعارات فورية بخصوص المحتوى الذي يتابعه طفلك والعديد من المعلومات الاخرى",
+                                        "اولا تحتاج الى تحميل تطبيق الابن على هاتف أبنك ثم انشئ فيه حساب بعد ذالك يظهر مفتاح خاص بحساب الطفل ادخل هذا المفتاح في المربع النصي بالاسفل وبعدها تكون قد انتهيت",
                                         size=13,
                                         weight=FontWeight.NORMAL,
                                         color="#666666",
@@ -309,7 +376,7 @@ class Home(View):
                     Container(height=30),
                     Container(
                         content=Text(
-                            "اضغط لاضافة جهاز",
+                            "ادخل مفتاح الابن لاضافة جهاز",
                             size=13,
                             weight=FontWeight.NORMAL,
                             color="#666666",
@@ -319,15 +386,33 @@ class Home(View):
                     Container(
                         content=Column(
                             controls=[
-                                IconButton(icon=icons.QR_CODE, icon_size=120),
-                                Container(
-                                    content=Text(
-                                        "امسح رمز (QR) على جهاز طفلك",
-                                        size=14,
-                                        weight=FontWeight.NORMAL,
-                                        color="#666666",
-                                        font_family="ElMessiri",
-                                    ),
+                                ResponsiveRow(
+                                    controls=[
+                                        Container(
+                                            content=ListTile(
+                                                title=TextField(
+                                                    label="ادخل المفتاح الذي نسخته من هاتف الابن",
+                                                    text_style=TextStyle(
+                                                        size=15, font_family="ElMessiri"
+                                                    ),
+                                                    label_style=TextStyle(
+                                                        size=12, font_family="ElMessiri"
+                                                    ),
+                                                    ref=self.keyTextbox,
+                                                    border=None,
+                                                    border_width=0,
+                                                ),
+                                                trailing=IconButton(
+                                                    icon=icons.SEND,
+                                                    on_click=self.addNewChild,
+                                                    icon_size=15,
+                                                ),
+                                            ),
+                                            bgcolor="#ffffff",
+                                            border=border.all(0.5, "#110b22"),
+                                            border_radius=border_radius.all(5),
+                                        ),
+                                    ],
                                 ),
                             ],
                             horizontal_alignment=CrossAxisAlignment.CENTER,
@@ -344,75 +429,32 @@ class Home(View):
         )
         self.update()
 
+    # دالة لتغيير الطفل المحدد
     def changeSelectedChild(self, event):
         self.innerChild["childData"] = self.children[int(event.data)]["childData"]
+        self.page.client_storage.set(
+            "ChildUser", self.children[int(event.data)]["childData"]["ChildUser"]
+        )
         self.innerChild["apps"] = self.children[int(event.data)]["apps"]
         self.buildHasChildrenUi()
 
-    async def sendPostRequest(self, url, body={}, headers=None):
-        headers = (
-            headers
-            if headers is not None
-            else {
-                "Content-Length": "165",
-                "Content-Type": "application/json",
-                "User-Agent": "PostmanRuntime/7.39.1",
-                "Accept": "*/*",
-                "Cache-Control": "no-cache",
-                "Host": "127.0.0.1:8000",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive",
-            }
+    # دالة لعرض رسائل للمستخدم
+    def showMessage(self, message):
+        snack_bar = SnackBar(
+            content=Text(
+                f"{message}",
+                style=TextStyle(size=15, font_family="ElMessiri"),
+            ),
+            show_close_icon=True,
         )
-        try:
-            response = requests.post(url=f"{self.baseUrl}/{url}/", data=body)
-            json = response.json()
-            if response.status_code == 200:
-                return [True, json , response.status_code]
-            else:
-                return [False, json ,response.status_code ]
-        except requests.exceptions.Timeout:
-            return [False, "اتصال الانترنت بطئ"]
-        except requests.exceptions.ConnectionError:
-            return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
+        self.page.open(snack_bar)
 
-    async def sendGetRequest(self, url, body={}, access=None):
-        headers = {
-            "Content-Length": "165",
-            "Content-Type": "multipart/form-data; boundary=--------------------------954726683782670649146059",
-            "Authorization": f"Bearer {access}",
-            "User-Agent": "PostmanRuntime/7.39.1",
-            "Accept": "*/*",
-            "Cache-Control": "no-cache",
-            "Host": "127.0.0.1:8000",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
-        }
-        try:
-            response = requests.get(
-                url=f"{self.baseUrl}/{url}/", data=body, headers=headers
-            )
-            json = response.json()
-            if response.status_code == 200:
-                return [True, json]
-            else:
-                return [False, json]
-        except requests.exceptions.Timeout:
-            return [False, "اتصال الانترنت بطئ"]
-        except requests.exceptions.ConnectionError:
-            return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
-
-    async def checkAccessToken(self, refresh):
-        state, result , statusCode = await self.sendPostRequest(
-            url="refresh", body={"refresh": refresh}
-        )
-        if state:
-            return [state, result["access"], result["refresh"]]
-        else:
-            return [state]
-
-    async def loadChildren(self, access):
-        state, result = await self.sendGetRequest("Children", access=access)
+    # دالة لتحميل بيانات الأطفال
+    def loadChildren(self):
+        state, result = self.page.run_task(self.sendGetRequest, "Children").result()
+        notifcationsState, notifcationsResult = self.page.run_task(
+            self.sendGetRequest, "notifications"
+        ).result()
         if state and len(result) > 0:
             for index, childData in enumerate(result.values()):
                 self.childrenList.append(
@@ -426,30 +468,210 @@ class Home(View):
                         "apps": [
                             ListTile(
                                 title=Text(
-                                    f"{app['hour']}",
+                                    self.app_icons.get(f"{app['appName']}", (f"{app['appName']}" , Icons.APPS))[0],
                                     style=TextStyle(
-                                        size=10,
+                                        size=13,
                                         weight=FontWeight.BOLD,
                                         font_family="ElMessiri",
                                     ),
                                 ),
                                 leading=Text(
-                                    f"{app['appName']}",
+                                    f"{app['hour']}",
                                     style=TextStyle(
-                                        size=15,
+                                        size=14,
                                         weight=FontWeight.BOLD,
                                         font_family="ElMessiri",
                                     ),
                                 ),
-                                trailing=Icon(icons.FACEBOOK),
-                                subtitle=ProgressBar(value=0.8),
+                                trailing=Icon(
+                                    self.app_icons.get(f"{app['appName']}", (f"{app['appName']}" , Icons.APPS))[1]
+                                ),
+                                subtitle=ProgressBar(
+                                    value=self.get_usage_percentage(
+                                        f"{app['appName']}", f"{app['hour']}"
+                                    )
+                                ),
                             )
                             for app in childData[1]
                         ],
                     }
                 )
+
             self.innerChild["childData"] = self.children[0]["childData"]
             self.innerChild["apps"] = self.children[0]["apps"]
+            self.page.client_storage.set(
+                "ChildUser", self.children[0]["childData"]["ChildUser"]
+            )
+            if notifcationsState and len(notifcationsResult) > 0:
+                self.notifications = Container(
+                    content=CircleAvatar(
+                        content=Text(
+                            f"{len(notifcationsResult)}",
+                            style=TextStyle(
+                                size=9,
+                                weight=FontWeight.BOLD,
+                                font_family="ElMessiri",
+                                color="#ffffff",
+                            ),
+                        ),
+                        bgcolor="red",
+                        width=20,
+                    ),
+                    height=13,
+                    alignment=alignment.top_right,
+                    width=float("inf"),
+                )
             self.buildHasChildrenUi()
-        else:
+        elif state and len(result) == 0:
             self.buildHasNoChild()
+        else:
+            self.ErrorUi()
+
+    # دالة لإرسال طلبات GET إلى الخادم
+    async def sendGetRequest(self, url, body={}):
+        access = await self.page.client_storage.get_async("access")
+        headers = {
+            "Authorization": f"Bearer {access}",
+            "Accept": "*/*",
+            "Cache-Control": "no-cache",
+        }
+        try:
+            response = requests.get(
+                url=f"{Home.baseUrl}/{url}/", data=body, headers=headers
+            )
+            json = response.json()
+            if response.status_code == 200:
+                return [True, json]
+            else:
+                return [False, json]
+        except requests.exceptions.Timeout:
+            return [False, "اتصال الانترنت بطئ"]
+        except requests.exceptions.ConnectionError:
+            return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
+
+    # دالة لإرسال طلبات POST إلى الخادم
+    async def sendPostRequest(self, url, body={}):
+        access = await self.page.client_storage.get_async("access")
+        headers = {
+            "Authorization": f"Bearer {access}",
+            "Accept": "*/*",
+            "Cache-Control": "no-cache",
+        }
+        try:
+            response = requests.post(
+                url=f"{Home.baseUrl}/{url}/", data=body, headers=headers
+            )
+            json = response.json()
+            if response.status_code == 200:
+                return [True, json]
+            else:
+                return [False, json]
+        except requests.exceptions.Timeout:
+            return [False, "اتصال الانترنت بطئ"]
+        except requests.exceptions.ConnectionError:
+            return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
+
+    # دالة لحساب نسبة استخدام التطبيق
+    def get_usage_percentage(self, app_name: str, usage_time: str) -> float:
+        NORMAL_USAGE = {
+            "social": 120,  # وسائل التواصل الاجتماعي (Facebook, Instagram, TikTok)
+            "messaging": 90,  # تطبيقات المراسلة (WhatsApp, Telegram)
+            "browsing": 60,  # التصفح (Chrome, Safari)
+            "video": 150,  # مشاهدة الفيديوهات (YouTube, Netflix)
+            "gaming": 90,  # الألعاب (PUBG, Candy Crush)
+            "system": 45,  # تطبيقات النظام
+            "other": 60,  # أي تطبيق غير محدد
+        }
+
+        APP_CATEGORIES = {
+            "com.facebook.katana": "social",
+            "com.instagram.android": "social",
+            "com.twitter.android": "social",
+            "com.whatsapp": "messaging",
+            "com.google.android.youtube": "video",
+            "com.android.chrome": "browsing",
+            "com.flet.child_app": "other",
+            "واجهة النظام": "system",
+        }
+
+        # تحويل الوقت إلى دقائق
+        h, m, s = map(int, usage_time.split(":"))
+        usage_minutes = h * 60 + m + s / 60
+
+        category = APP_CATEGORIES.get(app_name, "other")
+        normal_time = NORMAL_USAGE.get(category, 60)
+        return min(1.0, usage_minutes / normal_time)
+
+    # دالة لعرض واجهة الخطأ
+    def ErrorUi(self):
+        self.scroll = None
+        self.controls.clear()
+        self.controls.append(
+            Column(
+                controls=[
+                    Container(
+                        content=Text(
+                            "حدث خطأ الرجاء اعادة المحاولة",
+                            style=TextStyle(
+                                size=15,
+                                weight=FontWeight.BOLD,
+                                font_family="ElMessiri",
+                            ),
+                        ),  # Progress ring loader
+                        alignment=alignment.center,
+                        expand=True,  # Ensure the container expands to fill available space
+                    ),
+                    Container(
+                        content=TextButton(
+                            icon=icons.REPLAY_OUTLINED,
+                            text="اعادة المحاولة",
+                            style=ButtonStyle(
+                                text_style=TextStyle(
+                                    size=15,
+                                    weight=FontWeight.BOLD,
+                                    font_family="ElMessiri",
+                                ),
+                            ),
+                            on_click=lambda e: self.did_mount(),
+                        ),  # Progress ring loader
+                        alignment=alignment.center,
+                    ),
+                ],
+                expand=True,  # Make the column expand to take up all available space
+            )
+        )
+        self.update()
+
+    # دالة لتحديث الإشعارات بشكل دوري
+    async def updatenotification(self):
+        while self.notificationsState:
+            notifcationsState, notifcationsResult = await self.sendGetRequest(
+                "notifications"
+            )
+            if notifcationsState and len(notifcationsResult) > 0:
+                self.notifications = Container(
+                    content=CircleAvatar(
+                        content=Text(
+                            f"{len(notifcationsResult)}",
+                            style=TextStyle(
+                                size=9,
+                                weight=FontWeight.BOLD,
+                                font_family="ElMessiri",
+                                color="#ffffff",
+                            ),
+                        ),
+                        bgcolor="red",
+                        width=20,
+                    ),
+                    height=13,
+                    alignment=alignment.top_right,
+                    width=float("inf"),
+                )
+                self.buildHasChildrenUi()
+            await asyncio.sleep(50)
+            if not self.notificationsState:
+                break
+
+    # دالة تُستدعى عند إغلاق الواجهة
+    def will_unmount(self):
+        self.notificationsState = False
