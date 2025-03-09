@@ -729,4 +729,4 @@ class Home(View):
 
     # دالة تُستدعى عند إغلاق الواجهة
     def will_unmount(self):
-        self.notificationsState = False()
+        self.notificationsState = False
