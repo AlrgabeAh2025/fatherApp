@@ -697,6 +697,8 @@ class Home(View):
             notifcationsState, notifcationsResult = await self.sendGetRequest(
                 "notifications"
             )
+            print(notifcationsResult)
+            print(len(notifcationsResult))
             if notifcationsState and len(notifcationsResult) > 0:
                 self.notifications = Container(
                     content=CircleAvatar(
