@@ -177,15 +177,19 @@ class Home(View):
         self.controls.append(
             ResponsiveRow(
                 controls=[
-                    Dropdown(
-                        label="اختر احد الابناء لعرض بياناته",
-                        options=self.childrenList,  # قائمة الأطفال
-                        label_style=TextStyle(
-                            size=13,
-                            weight=FontWeight.NORMAL,
-                            font_family="ElMessiri",
+                    Container(
+                        content=Dropdown(
+                            label="اختر احد الابناء لعرض بياناته",
+                            options=self.childrenList,  # قائمة الأطفال
+                            label_style=TextStyle(
+                                size=13,
+                                weight=FontWeight.NORMAL,
+                                font_family="ElMessiri",
+                            ),
+                            width=float("inf"),
+                            on_change=self.changeSelectedChild,  # حدث تغيير الطفل المحدد
                         ),
-                        on_change=self.changeSelectedChild,  # حدث تغيير الطفل المحدد
+                        width=float("inf")
                     ),
                     Container(height=10),
                     Column(
@@ -725,4 +729,4 @@ class Home(View):
 
     # دالة تُستدعى عند إغلاق الواجهة
     def will_unmount(self):
-        self.notificationsState = False
+        self.notificationsState = False()
