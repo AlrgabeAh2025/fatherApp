@@ -56,7 +56,7 @@ def main(page: Page):
     page.apps = app_icons
     page.theme_mode = ThemeMode.LIGHT
     page.rtl = True
-    baseUrl = "http://192.168.244.135:2010"
+    baseUrl = "http://himya.justhost.ly"
 
     # مسح التخزين المحلي للعميل
     # page.client_storage.clear()

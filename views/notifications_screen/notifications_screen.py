@@ -318,21 +318,19 @@ class Notifications(View):
     async def sendGetRequest(self, url, body={}):
         access = await self.page.client_storage.get_async("access")
         headers = {
-            "Content-Length": "165",
-            "Content-Type": "multipart/form-data;",
             "Authorization": f"Bearer {access}",
-            "User-Agent": "PostmanRuntime/7.39.1",
             "Accept": "*/*",
             "Cache-Control": "no-cache",
-            "Host": "127.0.0.1:8000",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
         }
         try:
             response = requests.get(
                 url=f"{Notifications.baseUrl}/{url}/", data=body, headers=headers
             )
-            json = response.json()
+            print(response.text)
+            try:
+                json = response.json()
+            except Exception as e:print(e)
+            print(json)
             if response.status_code == 200:
                 return [True, json]
             else:
@@ -341,19 +339,17 @@ class Notifications(View):
             return [False, "اتصال الانترنت بطئ"]
         except requests.exceptions.ConnectionError:
             return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
+        except Exception as r:
+            print(r)
+            return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
 
     # دالة لإرسال طلبات DELETE إلى الخادم
     async def sendDeleteRequest(self, url, body={}):
         access = await self.page.client_storage.get_async("access")
         headers = {
-            "Content-Length": "165",  # يمكن حذف هذا إذا كنت تستخدم مكتبة requests
             "Authorization": f"Bearer {access}",
-            "User-Agent": "PostmanRuntime/7.39.1",
             "Accept": "*/*",
             "Cache-Control": "no-cache",
-            "Host": "127.0.0.1:8000",  # يمكن حذف هذا إذا كنت تستخدم مكتبة requests
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
         }
         try:
             response = requests.delete(

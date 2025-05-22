@@ -168,7 +168,7 @@ class Home(View):
         self.controls.append(loader)
         self.update()
         self.loadChildren()  # تحميل بيانات الأطفال
-        self.page.run_task(self.updatenotification)  # تحديث الإشعارات بشكل دوري
+        # self.page.run_task(self.updatenotification)  # تحديث الإشعارات بشكل دوري
 
     # دالة لبناء واجهة عندما يكون هناك أطفال مضافين
     def buildHasChildrenUi(self):
@@ -730,3 +730,15 @@ class Home(View):
     # دالة تُستدعى عند إغلاق الواجهة
     def will_unmount(self):
         self.notificationsState = False
+
+
+
+
+
+
+
+
+
+
+
+

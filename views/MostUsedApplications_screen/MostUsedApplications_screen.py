@@ -190,36 +190,46 @@ class MostUsedApplications(View):
     # دالة لإرسال طلبات GET إلى الخادم
     async def sendGetRequest(self, url, body={}):
         access = await self.page.client_storage.get_async("access")
+        
         headers = {
-            "Content-Length": "165",  # يمكن حذف هذا إذا كنت تستخدم مكتبة requests
             "Authorization": f"Bearer {access}",
-            "User-Agent": "PostmanRuntime/7.39.1",
             "Accept": "*/*",
             "Cache-Control": "no-cache",
-            "Host": "127.0.0.1:8000",  # يمكن حذف هذا إذا كنت تستخدم مكتبة requests
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
         }
 
         try:
             response = requests.get(
-                url=f"{MostUsedApplications.baseUrl}/{url}/", data=body, headers=headers
+                url=f"{MostUsedApplications.baseUrl}/{url}/",
+                params=body,
+                headers=headers
             )
-            json = response.json()
+
+            print(response.status_code)
+
+            try:
+                json_data = response.json()
+            except:
+                json_data = {}
+
             if response.status_code == 200:
-                return [True, json]
+                return [True, json_data]
             else:
-                return [False, json]
+                return [False, json_data]
+
         except requests.exceptions.Timeout:
             return [False, "اتصال الانترنت بطئ"]
         except requests.exceptions.ConnectionError:
             return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
+        except Exception as e:
+            print(e)
+            return [False, "اتصال الانترنت بطئ"]
 
     # دالة لتحميل التطبيقات الأكثر استخدامًا
     def loadMostUseApps(self):
         childId = self.page.run_task(
             self.page.client_storage.get_async, "ChildUser"
         ).result()
+        print(childId)
         state, result = self.page.run_task(
             self.sendGetRequest, "mostUseApps", {"ChildUser": childId}
         ).result()
