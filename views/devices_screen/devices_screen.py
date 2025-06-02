@@ -236,6 +236,7 @@ class Devices(View):
             _, result = self.page.run_task(
                 self.sendDeleteRequest, "Children", {"key": e.control.data}
             ).result()
+            print(result)
             self.did_mount()  # إعادة تحميل الواجهة
             self.showMessage(f"{result['key']}")  # عرض رسالة النتيجة
 
