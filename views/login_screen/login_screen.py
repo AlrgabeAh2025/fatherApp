@@ -19,7 +19,7 @@ from flet import (
     CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
     MainAxisAlignment,  # لمحاذاة العناصر عموديًا
     IconButton,  # زر يحتوي على أيقونة
-    icons,  # مكتبة الأيقونات المدمجة
+    Icons,  # مكتبة الأيقونات المدمجة
     ProgressRing,  # حلقة التحميل
     alignment,  # لمحاذاة العناصر
     SnackBar,  # لعرض الرسائل العابرة
@@ -67,7 +67,7 @@ class Login(View):
                     Row(  # صف لعرض زر الرجوع
                         controls=[
                             IconButton(
-                                icon=icons.ARROW_BACK,  # أيقونة الرجوع
+                                icon=Icons.ARROW_BACK,  # أيقونة الرجوع
                                 on_click=lambda x: self.page.go("/"),  # حدث النقر للرجوع إلى الصفحة الرئيسية
                             )
                         ],

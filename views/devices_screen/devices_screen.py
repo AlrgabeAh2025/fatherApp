@@ -12,7 +12,7 @@ from flet import (
     IconButton,  # زر يحتوي على أيقونة
     AppBar,  # شريط التطبيق العلوي
     Icon,  # لعرض الأيقونات
-    icons,  # مكتبة الأيقونات المدمجة
+    Icons,  # مكتبة الأيقونات المدمجة
     ListTile,  # عنصر قائمة
     PopupMenuButton,  # زر قائمة منبثقة
     PopupMenuItem,  # عنصر في القائمة المنبثقة
@@ -43,7 +43,7 @@ class Devices(View):
         # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             leading=IconButton(
-                icon=icons.ARROW_BACK,
+                icon=Icons.ARROW_BACK,
                 icon_color="#ffffff",
                 on_click=lambda x: self.page.go("/home"),  # حدث النقر للرجوع إلى الصفحة الرئيسية
             ),
@@ -78,7 +78,7 @@ class Devices(View):
                     ),
                     Container(
                         content=TextButton(
-                            icon=icons.REPLAY_OUTLINED,
+                            icon=Icons.REPLAY_OUTLINED,
                             text="اعادة المحاولة",
                             style=ButtonStyle(
                                 text_style=TextStyle(
@@ -161,7 +161,7 @@ class Devices(View):
                                                 border_width=0,
                                             ),
                                             trailing=IconButton(
-                                                icon=icons.SEND,
+                                                icon=Icons.SEND,
                                                 on_click=self.addNewChild,  # حدث النقر لإضافة جهاز جديد
                                                 icon_size=15,
                                             ),
@@ -279,7 +279,7 @@ class Devices(View):
                             Container(
                                 content=ListTile(
                                     leading=Icon(
-                                        icons.PHONE_ANDROID_OUTLINED,
+                                        Icons.PHONE_ANDROID_OUTLINED,
                                         color="#110b22",
                                     ),
                                     title=Text(
@@ -299,12 +299,12 @@ class Devices(View):
                                         ),
                                     ),
                                     trailing=PopupMenuButton(
-                                        icon=icons.MORE_VERT,
+                                        icon=Icons.MORE_VERT,
                                         items=[
                                             PopupMenuItem(
                                                 text="حذف",
                                                 data=childData[0]["key"],
-                                                icon=icons.DELETE,
+                                                icon=Icons.DELETE,
                                                 on_click=self.deleteUser,  # حدث النقر لحذف الجهاز
                                             ),
                                         ],

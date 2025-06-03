@@ -82,19 +82,19 @@ class Home(View):
                 Container(height=12),
                 NavigationDrawerDestination(
                     label="الرئيسية",
-                    icon_content=Icon(icons.HOME_OUTLINED),
-                    selected_icon_content=Icon(icons.HOME),
+                    icon_content=Icon(Icons.HOME_OUTLINED),
+                    selected_icon_content=Icon(Icons.HOME),
                 ),
                 Divider(thickness=2),
                 NavigationDrawerDestination(
                     label="الاجهزة المرتبطة",
-                    icon_content=Icon(icons.PHONE_ANDROID_OUTLINED),
-                    selected_icon_content=Icon(icons.PHONE_ANDROID),
+                    icon_content=Icon(Icons.PHONE_ANDROID_OUTLINED),
+                    selected_icon_content=Icon(Icons.PHONE_ANDROID),
                 ),
                 NavigationDrawerDestination(
                     label="تسجيل الخروج",
-                    icon_content=Icon(icons.LOGOUT_OUTLINED),
-                    selected_icon_content=Icon(icons.LOGOUT),
+                    icon_content=Icon(Icons.LOGOUT_OUTLINED),
+                    selected_icon_content=Icon(Icons.LOGOUT),
                 ),
             ],
         )
@@ -103,14 +103,14 @@ class Home(View):
         self.appbar = AppBar(
             actions=[
                 IconButton(
-                    icon=icons.PERSON,
+                    icon=Icons.PERSON,
                     icon_color="#ffffff",
                     on_click=lambda x: self.page.go(
                         "/Profile"
                     ),  # الانتقال إلى صفحة الملف الشخصي
                 ),
                 IconButton(
-                    icon=icons.NOTIFICATIONS,
+                    icon=Icons.NOTIFICATIONS,
                     icon_color="#ffffff",
                     on_click=lambda x: self.page.go(
                         "/notifications"
@@ -118,7 +118,7 @@ class Home(View):
                 ),
             ],
             leading=IconButton(
-                icon=icons.MENU,
+                icon=Icons.MENU,
                 icon_color="#ffffff",
                 on_click=lambda e: self.page.open(self.drawer),  # فتح القائمة الجانبية
             ),
@@ -246,7 +246,7 @@ class Home(View):
                                             controls=[
                                                 Container(),
                                                 Icon(
-                                                    icons.WIDGETS,
+                                                    Icons.WIDGETS,
                                                     size=50,
                                                     color="#110b22",
                                                 ),
@@ -277,7 +277,7 @@ class Home(View):
                                             controls=[
                                                 self.notifications,
                                                 Icon(
-                                                    icons.SECURITY,
+                                                    Icons.SECURITY,
                                                     size=50,
                                                     color="#110b22",
                                                 ),
@@ -395,7 +395,7 @@ class Home(View):
                         content=Column(
                             controls=[
                                 ListTile(
-                                    leading=Icon(icons.INFO),
+                                    leading=Icon(Icons.INFO),
                                     title=Text(
                                         "انت لم تضف جهاز بعد الرجاء اضافة جهاز اولا",
                                         size=13,
@@ -450,7 +450,7 @@ class Home(View):
                                                     border_width=0,
                                                 ),
                                                 trailing=IconButton(
-                                                    icon=icons.SEND,
+                                                    icon=Icons.SEND,
                                                     on_click=self.addNewChild,
                                                     icon_size=15,
                                                 ),
@@ -515,7 +515,7 @@ class Home(View):
                         "apps": [
                             ListTile(
                                 title=Text(
-                                    self.app_icons.get(
+                                    self.app_Icons.get(
                                         f"{app['appName']}",
                                         (f"{app['appName']}", Icons.APPS),
                                     )[0],
@@ -534,7 +534,7 @@ class Home(View):
                                     ),
                                 ),
                                 trailing=Icon(
-                                    self.app_icons.get(
+                                    self.app_Icons.get(
                                         f"{app['appName']}",
                                         (f"{app['appName']}", Icons.APPS),
                                     )[1]
@@ -676,7 +676,7 @@ class Home(View):
                     ),
                     Container(
                         content=TextButton(
-                            icon=icons.REPLAY_OUTLINED,
+                            icon=Icons.REPLAY_OUTLINED,
                             text="اعادة المحاولة",
                             style=ButtonStyle(
                                 text_style=TextStyle(

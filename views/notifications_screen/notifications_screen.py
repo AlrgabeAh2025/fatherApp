@@ -14,7 +14,7 @@ from flet import (
     CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
     MainAxisAlignment,  # لمحاذاة العناصر عموديًا
     Icon,  # لعرض الأيقونات
-    icons,  # مكتبة الأيقونات المدمجة
+    Icons,  # مكتبة الأيقونات المدمجة
     IconButton,  # زر يحتوي على أيقونة
     AppBar,  # شريط التطبيق العلوي
     ListTile,  # عنصر قائمة
@@ -41,7 +41,7 @@ class MoreInfoAboutNotifications(View):
         # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             leading=IconButton(
-                icon=icons.ARROW_BACK,
+                icon=Icons.ARROW_BACK,
                 icon_color="#ffffff",
                 on_click=lambda x: self.page.go("/notifications"),  # حدث النقر للرجوع إلى صفحة الإشعارات
             ),
@@ -89,7 +89,7 @@ class MoreInfoAboutNotifications(View):
                                     controls=[
                                         Container(
                                             content=ListTile(
-                                                leading=Icon(icons.PERSON),
+                                                leading=Icon(Icons.PERSON),
                                                 title=Text(
                                                     f"تنبيه بخصوص ابنك {note['child_first_name']}",
                                                     style=TextStyle(
@@ -114,7 +114,7 @@ class MoreInfoAboutNotifications(View):
                                     controls=[
                                         Container(
                                             content=ListTile(
-                                                leading=Icon(icons.TIMER),
+                                                leading=Icon(Icons.TIMER),
                                                 title=Text(
                                                     "وقت حدوث البلاغ",
                                                     style=TextStyle(
@@ -139,7 +139,7 @@ class MoreInfoAboutNotifications(View):
                                     controls=[
                                         Container(
                                             content=ListTile(
-                                                leading=Icon(icons.IMAGE),
+                                                leading=Icon(Icons.IMAGE),
                                                 title=Text(
                                                     "محتوى البلاغ",
                                                     style=TextStyle(
@@ -237,7 +237,7 @@ class Notifications(View):
         # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             leading=IconButton(
-                icon=icons.ARROW_BACK,
+                icon=Icons.ARROW_BACK,
                 icon_color="#ffffff",
                 on_click=lambda x: self.page.go("/home"),  # حدث النقر للرجوع إلى الصفحة الرئيسية
             ),
@@ -394,7 +394,7 @@ class Notifications(View):
                     ),
                     Container(
                         content=TextButton(
-                            icon=icons.REPLAY_OUTLINED,
+                            icon=Icons.REPLAY_OUTLINED,
                             text="اعادة المحاولة",
                             style=ButtonStyle(
                                 text_style=TextStyle(
@@ -422,7 +422,7 @@ class Notifications(View):
                     controls=[
                         Container(
                             content=ListTile(
-                                leading=Icon(icons.ERROR, color=colors.ERROR),
+                                leading=Icon(Icons.ERROR, color=colors.ERROR),
                                 title=Text(
                                     f"تنبيه بخصوص ابنك {note['child_first_name']}",
                                     style=TextStyle(
@@ -440,11 +440,11 @@ class Notifications(View):
                                     ),
                                 ),
                                 trailing=PopupMenuButton(
-                                    icon=icons.MORE_VERT,
+                                    icon=Icons.MORE_VERT,
                                     items=[
                                         PopupMenuItem(
                                             text="حذف",
-                                            icon=icons.DELETE,
+                                            icon=Icons.DELETE,
                                             data=note["id"],
                                             on_click=lambda e: self.deleteNote(e),  # حدث النقر لحذف الإشعار
                                         ),

@@ -16,7 +16,7 @@ from flet import (
     TextStyle,  # لتخصيص نمط النصوص
     CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
     MainAxisAlignment,  # لمحاذاة العناصر عموديًا
-    icons,  # مكتبة الأيقونات المدمجة
+    Icons,  # مكتبة الأيقونات المدمجة
     IconButton,  # زر يحتوي على أيقونة
     Dropdown,  # قائمة منسدلة
     dropdown,  # لتحديد خيارات القائمة المنسدلة
@@ -141,7 +141,7 @@ class SignUp(View):
                     Row(  # صف لعرض زر الرجوع
                         controls=[
                             IconButton(
-                                icon=icons.ARROW_BACK,  # أيقونة الرجوع
+                                icon=Icons.ARROW_BACK,  # أيقونة الرجوع
                                 on_click=lambda e: self.page.go(
                                     "/"
                                 ),  # حدث النقر للرجوع إلى الصفحة الرئيسية

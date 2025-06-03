@@ -17,7 +17,7 @@ from flet import (
     TextStyle,  # لتخصيص نمط النصوص
     CrossAxisAlignment,  # لمحاذاة العناصر أفقيًا
     MainAxisAlignment,  # لمحاذاة العناصر عموديًا
-    icons,  # مكتبة الأيقونات المدمجة
+    Icons,  # مكتبة الأيقونات المدمجة
     IconButton,  # زر يحتوي على أيقونة
     AppBar,  # شريط التطبيق العلوي
     ListTile,  # عنصر قائمة
@@ -43,7 +43,7 @@ class PersonalInformation(View):
         # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             leading=IconButton(
-                icon=icons.ARROW_BACK,
+                icon=Icons.ARROW_BACK,
                 icon_color="#ffffff",
                 on_click=lambda x: self.page.go("/Profile"),  # حدث النقر للرجوع إلى صفحة الملف الشخصي
             ),
@@ -222,7 +222,7 @@ class PersonalInformation(View):
                     ),
                     Container(
                         content=TextButton(
-                            icon=icons.REPLAY_OUTLINED,
+                            icon=Icons.REPLAY_OUTLINED,
                             text="اعادة المحاولة",
                             style=ButtonStyle(
                                 text_style=TextStyle(
@@ -338,7 +338,7 @@ class SecurityPasswords(View):
         # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             leading=IconButton(
-                icon=icons.ARROW_BACK,
+                icon=Icons.ARROW_BACK,
                 icon_color="#ffffff",
                 on_click=lambda x: self.page.go("/Profile"),  # حدث النقر للرجوع إلى صفحة الملف الشخصي
             ),
@@ -509,7 +509,7 @@ class SecurityPasswords(View):
                     ),
                     Container(
                         content=TextButton(
-                            icon=icons.REPLAY_OUTLINED,
+                            icon=Icons.REPLAY_OUTLINED,
                             text="اعادة المحاولة",
                             style=ButtonStyle(
                                 text_style=TextStyle(
@@ -634,7 +634,7 @@ class Profile(View):
                     controls=[
                         TextButton(
                             text="تغيير صورة الملف الشخصي",
-                            icon=icons.ADD_A_PHOTO,
+                            icon=Icons.ADD_A_PHOTO,
                             on_click=lambda _: self.selector.pick_files(
                                 allow_multiple=False,
                                 allowed_extensions=["jpg", "jpeg", "png"],
@@ -653,7 +653,7 @@ class Profile(View):
         # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             leading=IconButton(
-                icon=icons.ARROW_BACK,
+                icon=Icons.ARROW_BACK,
                 icon_color="#ffffff",
                 on_click=lambda x: self.page.go("/home"),  # حدث النقر للرجوع إلى الصفحة الرئيسية
             ),
@@ -737,7 +737,7 @@ class Profile(View):
                                                         ),
                                                     ),
                                                     trailing=IconButton(
-                                                        icon=icons.PERSON,
+                                                        icon=Icons.PERSON,
                                                     ),
                                                 ),
                                                 bgcolor="#ffffff",
@@ -762,7 +762,7 @@ class Profile(View):
                                                         ),
                                                     ),
                                                     trailing=IconButton(
-                                                        icon=icons.LOCK,
+                                                        icon=Icons.LOCK,
                                                     ),
                                                 ),
                                                 bgcolor="#ffffff",
@@ -787,7 +787,7 @@ class Profile(View):
                                                         ),
                                                     ),
                                                     trailing=IconButton(
-                                                        icon=icons.LOGOUT,
+                                                        icon=Icons.LOGOUT,
                                                     ),
                                                 ),
                                                 bgcolor="#ffffff",
@@ -865,7 +865,7 @@ class Profile(View):
                     ),
                     Container(
                         content=TextButton(
-                            icon=icons.REPLAY_OUTLINED,
+                            icon=Icons.REPLAY_OUTLINED,
                             text="اعادة المحاولة",
                             style=ButtonStyle(
                                 text_style=TextStyle(
