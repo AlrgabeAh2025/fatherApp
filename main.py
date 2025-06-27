@@ -59,7 +59,7 @@ def main(page: Page):
     baseUrl = "https://alrgabe.com.ly"
 
     # مسح التخزين المحلي للعميل
-    page.client_storage.clear()
+    # page.client_storage.clear()
 
     # تعريف الثيم الخاص بالتطبيق
     page.theme = Theme(
