@@ -204,7 +204,6 @@ class MostUsedApplications(View):
                 headers=headers
             )
 
-            print(response.status_code)
 
             try:
                 json_data = response.json()
@@ -229,9 +228,8 @@ class MostUsedApplications(View):
         childId = self.page.run_task(
             self.page.client_storage.get_async, "ChildUser"
         ).result()
-        print(childId)
         state, result = self.page.run_task(
-            self.sendGetRequest, "mostUseApps", {"ChildUser": childId}
+            self.sendGetRequest, f"mostUseApps?ChildUser={childId}", {}
         ).result()
         if state:
             self.apps = [

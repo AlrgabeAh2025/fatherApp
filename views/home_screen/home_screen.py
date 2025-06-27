@@ -53,7 +53,6 @@ class Home(View):
         self.notifications = Container(width=0, height=0)  # حاوية للإشعارات
         self.notificationsState = True  # حالة الإشعارات (مفعلة/معطلة)
 
-        # قاموس يحتوي على أيقونات التطبيقات وأسمائها
         self.app_icons = {
             "com.android.chrome": ("متصفح كروم", Icons.LANGUAGE),  # Chrome
             "com.whatsapp": ("واتساب", Icons.CHAT),  # WhatsApp
@@ -515,7 +514,7 @@ class Home(View):
                         "apps": [
                             ListTile(
                                 title=Text(
-                                    self.app_Icons.get(
+                                    self.app_icons.get(
                                         f"{app['appName']}",
                                         (f"{app['appName']}", Icons.APPS),
                                     )[0],
@@ -534,7 +533,7 @@ class Home(View):
                                     ),
                                 ),
                                 trailing=Icon(
-                                    self.app_Icons.get(
+                                    self.app_icons.get(
                                         f"{app['appName']}",
                                         (f"{app['appName']}", Icons.APPS),
                                     )[1]
@@ -597,9 +596,11 @@ class Home(View):
                 return [True, json]
             else:
                 return [False, json]
-        except requests.exceptions.Timeout:
+        except requests.exceptions.Timeout as e:
+            print(e)
             return [False, "اتصال الانترنت بطئ"]
-        except requests.exceptions.ConnectionError:
+        except requests.exceptions.ConnectionError as e:
+            print(e)
             return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
 
     # دالة لإرسال طلبات POST إلى الخادم
@@ -620,8 +621,10 @@ class Home(View):
             else:
                 return [False, json]
         except requests.exceptions.Timeout:
+            print("erorr1")
             return [False, "اتصال الانترنت بطئ"]
         except requests.exceptions.ConnectionError:
+            print("erorr2")
             return [False, "حدث خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت."]
 
     # دالة لحساب نسبة استخدام التطبيق

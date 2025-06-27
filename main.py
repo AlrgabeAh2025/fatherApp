@@ -56,10 +56,10 @@ def main(page: Page):
     page.apps = app_icons
     page.theme_mode = ThemeMode.LIGHT
     page.rtl = True
-    baseUrl = "http://himya.justhost.ly"
+    baseUrl = "https://alrgabe.com.ly"
 
     # مسح التخزين المحلي للعميل
-    # page.client_storage.clear()
+    page.client_storage.clear()
 
     # تعريف الثيم الخاص بالتطبيق
     page.theme = Theme(
@@ -130,7 +130,7 @@ def main(page: Page):
             async def refresh(refresh_token):
                 body = {"refresh": refresh_token}
                 try:
-                    response = requests.post(url=f"{baseUrl}/refresh/", data=body)
+                    response = requests.post(url=f"{baseUrl}/refresh/", data=body , timeout=50)
 
                     json = response.json()
                     
@@ -174,3 +174,47 @@ def main(page: Page):
 
 # تشغيل التطبيق
 app(main, assets_dir="assets")
+
+
+
+
+
+"""
+
+<VirtualHost *:443>
+    ServerName alrgabe.com.ly
+    ServerAlias www.alrgabe.com.ly
+
+    DocumentRoot /var/www/alrgabe.com.ly
+
+    Alias /static /var/www/alrgabe.com.ly/static
+    <Directory /var/www/alrgabe.com.ly/static>
+        Require all granted
+    </Directory>
+
+    Alias /media /var/www/alrgabe.com.ly/media
+    <Directory /var/www/alrgabe.com.ly/media>
+        Require all granted
+    </Directory>
+
+    <Directory /var/www/alrgabe.com.ly/blockContent>
+        <Files wsgi.py>
+            Require all granted
+        </Files>
+    </Directory>
+
+    WSGIDaemonProcess alrgabe_app_ssl python-home=/var/www/alrgabe.com.ly/env python-path=/var/www/alrgabe.com.ly
+    WSGIProcessGroup alrgabe_app_ssl
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIScriptAlias / /var/www/alrgabe.com.ly/blockContent/wsgi.py
+
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/alrgabe.com.ly/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/alrgabe.com.ly/privkey.pem
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+sudo tail -f /var/log/apache2/access.log
+
+"""
