@@ -37,7 +37,10 @@ class MoreInfoAboutNotifications(View):
         self.scroll = ScrollMode.HIDDEN  # تعيين وضع التمرير إلى تلقائي
         self.bgcolor = "#ffffff"  # لون الخلفية
         self.page = page  # حفظ صفحة التطبيق
-
+        self.image_control = Image(
+            src="",
+            width=150,
+        )
         # تعريف AppBar (شريط التطبيق العلوي)
         self.appbar = AppBar(
             leading=IconButton(
@@ -161,10 +164,11 @@ class MoreInfoAboutNotifications(View):
                                     ],
                                 ),
                                 Container(
-                                    content=Image(
-                                        src=f"{MoreInfoAboutNotifications.baseUrl}{note['imageOfNotification']}",
-                                        width=150,
-                                    ),
+                                    content=self.image_control,
+                                    # content=Image(
+                                    #     src=f"{MoreInfoAboutNotifications.baseUrl}{note['imageOfNotification']}",
+                                    #     width=150,
+                                    # ),
                                     border_radius=border_radius.all(10),
                                     width=300,
                                 ),
@@ -219,12 +223,30 @@ class MoreInfoAboutNotifications(View):
         self.update()
 
     # دالة لتحميل تفاصيل التنبيه
+    # def loadNote(self):
+    #     result = self.page.run_task(self.page.client_storage.get_async, "note").result()
+    #     if result:
+    #         self.buildUi(result)
+    #     else:
+    #         self.ErrorUi()  # عرض واجهة الخطأ
+
     def loadNote(self):
         result = self.page.run_task(self.page.client_storage.get_async, "note").result()
         if result:
-            self.buildUi(result)  # بناء واجهة تفاصيل التنبيه
+            image_url = f"{MoreInfoAboutNotifications.baseUrl}{result['imageOfNotification']}"
+            try:
+                response = requests.get(image_url, timeout=5)
+                if response.status_code == 200:
+                    self.image_control.src = image_url
+                else:
+                    self.image_control.src = "assets/image_not_found.png"
+            except:
+                self.image_control.src = "assets/error_image.png"
+
+            self.buildUi(result)
         else:
-            self.ErrorUi()  # عرض واجهة الخطأ
+            self.ErrorUi()
+
 
 # تعريف فئة Notifications التي تمثل شاشة الإشعارات
 class Notifications(View):
