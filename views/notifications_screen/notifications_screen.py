@@ -162,7 +162,7 @@ class MoreInfoAboutNotifications(View):
                                 ),
                                 Container(
                                     content=Image(
-                                        src=f"{MoreInfoAboutNotifications.baseUrl}{note['imageOfNotification'].replace('/uploads_images' , '')}",
+                                        src=f"{MoreInfoAboutNotifications.baseUrl}{note['imageOfNotification']}",
                                         width=150,
                                     ),
                                     border_radius=border_radius.all(10),
